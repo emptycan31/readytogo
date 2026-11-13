@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>持ち物チェックノート</title>
+<style>
+:root{--bg:#f6f1e7;--paper:#fffdf8;--ink:#2b2a27;--sub:#85806f;--line:#d9d2c0;--acc:#c4572b;--tab:#e8dfc9;--tabon:#fffdf8;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#1d1c19;--paper:#292824;--ink:#ece7da;--sub:#9b9583;--line:#4a4739;--acc:#e8805a;--tab:#34322b;--tabon:#292824}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#1d1c19;--paper:#292824;--ink:#ece7da;--sub:#9b9583;--line:#4a4739;--acc:#e8805a;--tab:#34322b;--tabon:#292824}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 -apple-system,"Hiragino Sans","Noto Sans JP",sans-serif}
+.wrap{max-width:640px;margin:0 auto;padding:12px 12px 40px}
+.lead{font-size:14px;color:var(--sub);margin:2px 2px 6px;text-align:center}
+.tabs{display:flex;gap:4px;overflow-x:auto;padding:4px 2px 0;-webkit-overflow-scrolling:touch}
+.tab{flex:none;min-width:58px;border:1px solid var(--line);border-bottom:none;border-radius:10px 10px 0 0;background:var(--tab);color:var(--ink);padding:6px 8px 4px;text-align:center;font:inherit;font-size:14px;cursor:pointer;line-height:1.25}
+.tab small{display:block;font-size:11px;color:var(--sub)}
+.tab.today small{color:var(--acc);font-weight:700}
+.tab.on{background:var(--tabon);font-weight:700;padding-top:9px}
+.plusTab{color:var(--acc);font-size:20px;min-width:46px;align-self:stretch}
+.addbar{display:flex;align-items:center;gap:8px;margin:8px 0}
+.addbar[hidden]{display:none}
+.dlitem{border-bottom:1px solid var(--line)}.dlitem .row{border-bottom:none}
+.row2{display:flex;gap:8px;align-items:center;padding:0 0 6px 30px}
+.row2 input[type=date],.row2 select{font:inherit;font-size:14px;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:6px;padding:3px 4px}
+.tag{font-size:12px;color:var(--acc);border:1px solid var(--acc);border-radius:999px;padding:0 8px}
+.soon{margin:0 0 10px}.soonh{font-weight:700;margin-bottom:4px;text-align:center}.soonr{font-size:14px;padding:2px 0}.soonr.hot{color:var(--acc)}.soonr.done{text-decoration:line-through;color:var(--sub)}
+.pickbox{margin-top:8px;display:flex;flex-wrap:wrap;align-items:center;gap:8px}.pickb{border:1px solid var(--acc);color:var(--acc);background:transparent;border-radius:999px;padding:4px 14px;font:inherit;cursor:pointer}.plus+.plus{margin-left:8px}.favh input{border-bottom:4px double var(--sub)}
+.favtab{color:var(--acc);font-size:20px;min-width:46px}.favtab small{color:transparent}
+.star{border:none;background:transparent;color:var(--sub);font:inherit;font-size:20px;cursor:pointer;padding:0 4px;vertical-align:middle}.star.on{color:var(--acc)}
+.favcard{margin-bottom:10px}.favh{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}.sub{color:var(--sub);font-size:14px}
+.cal{border:1px solid var(--line);border-radius:10px;background:var(--paper);padding:10px;margin:8px 0}.cal[hidden]{display:none}
+.calh{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.calg{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}.wd{font-size:12px;color:var(--sub)}
+.cd{border:1px solid transparent;border-radius:8px;background:transparent;color:var(--ink);font:inherit;font-size:15px;padding:7px 0;cursor:pointer}.cd.td{border-color:var(--acc)}.cd.on{background:var(--acc);color:#fff}.cd.ex{color:var(--sub);opacity:.4}
+.calf{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13px;color:var(--sub)}.calf span{flex:1}
+.page{background:var(--paper);border:1px solid var(--line);border-radius:0 12px 12px 12px;padding:14px;margin-top:-1px}
+.head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:10px}
+h1{font-size:19px;margin:2px 0;line-height:1.3}
+.go{flex:none;border:1px solid var(--acc);color:var(--acc);background:transparent;border-radius:999px;padding:5px 12px;font:inherit;font-size:13px;cursor:pointer}
+.box{border:1px solid var(--line);border-radius:10px;padding:10px}
+.box.skip .list{opacity:.4}
+.usual-h{display:flex;align-items:center;gap:8px;font-weight:700}
+.row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--line)}
+.row.done .t{text-decoration:line-through;color:var(--sub)}
+input[type=checkbox]{width:22px;height:22px;accent-color:var(--acc);flex:none}
+input[type=text],input[type=date]{font:inherit;font-size:16px;color:var(--ink);background:transparent;border:none;border-bottom:1px solid var(--line);padding:4px 2px;min-width:0}
+.t{flex:1}
+.x,.plus{border:none;background:transparent;color:var(--sub);font:inherit;font-size:18px;cursor:pointer;padding:2px 8px}
+.plus{border:1px dashed var(--line);border-radius:8px;margin-top:6px;color:var(--acc);padding:2px 14px}
+.list{padding-left:30px}
+.skipbtn{display:block;margin:6px 0 0 auto;border:1px solid var(--line);background:transparent;color:var(--sub);border-radius:8px;padding:2px 14px;font:inherit;font-size:14px;cursor:pointer}
+.skipbtn.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.dots{border:none;border-top:2px dotted var(--sub);margin:16px 0 8px}
+.link{border:none;background:transparent;color:var(--sub);text-decoration:underline;font:inherit;font-size:13px;cursor:pointer;margin-top:14px;padding:0}
+.donebox{margin:0 0 10px;font-weight:700;color:var(--acc)}.donebox:empty{display:none}
+.confirm{margin-top:14px;font-size:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="lead">余裕をもって前日に確認しよう</div>
+  <div class="tabs" id="tabs"></div>
+  <div class="cal" id="cal" hidden></div>
+  <div class="page" id="page"></div>
+</div>
+<script>
+const K='mochimono.v1';
+let S=null;
+try{S=JSON.parse(localStorage.getItem(K))}catch(e){}
+S=S||{usual:[{id:'u1',t:''}],pages:{},cur:null};
+const save=()=>{try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}};
+const uid=()=>Math.random().toString(36).slice(2,9);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const todayS=()=>iso(new Date());
+const addDays=(s,n)=>{const d=new Date(s+'T00:00');d.setDate(d.getDate()+n);return iso(d)};
+const md=s=>{const d=new Date(s+'T00:00');return (d.getMonth()+1)+'/'+d.getDate()};
+const wd=s=>'日月火水木金土'[new Date(s+'T00:00').getDay()];
+const blank=()=>({id:uid(),t:'',done:false});
+const fmtT=ms=>{const d=new Date(ms),z=n=>String(n).padStart(2,'0');return d.getFullYear()+'/'+z(d.getMonth()+1)+'/'+z(d.getDate())+' '+z(d.getHours())+':'+z(d.getMinutes())};
+const doneHtml=p=>p.doneAt?`確認：${fmtT(p.doneAt)}　mission complete`:'';
+function upd(p){const ok=!!p.usual&&p.items.filter(i=>itxt(i).trim()).every(idone);if(ok&&!p.doneAt)p.doneAt=Date.now();else if(!ok)p.doneAt=0}
+const pg=d=>S.pages[d]||(S.pages[d]={usual:'',items:[blank()]});
+let focusSel=null,confirmDel=false,cal=null;
+function renderCal(){
+  const el=document.getElementById('cal');
+  if(!cal){el.hidden=true;return}
+  el.hidden=false;
+  const y=cal.y,m=cal.m,first=new Date(y,m,1).getDay(),n=new Date(y,m+1,0).getDate(),t=todayS();
+  let h=`<div class="calh"><button class="x" data-a="calprev" aria-label="前の月">‹</button><b>${y}年${m+1}月</b><button class="x" data-a="calnext" aria-label="次の月">›</button></div><div class="calg">`+'日月火水木金土'.split('').map(w=>`<span class="wd">${w}</span>`).join('');
+  for(let i=0;i<first;i++)h+='<span></span>';
+  for(let d=1;d<=n;d++){const s=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const ex=!!S.pages[s]||s<t,on=cal.sel.includes(s);
+    h+=`<button class="cd${on?' on':''}${ex?' ex':''}${s===t?' td':''}" data-d="${s}"${ex?' disabled':' data-a="calday"'}>${d}</button>`}
+  h+=`</div><div class="calf"><span>${cal.sel.length?cal.sel.length+'日 選択中':'日にちをタップ（複数選べます）'}</span><button class="go" data-a="calok">決定</button><button class="go" style="color:var(--sub);border-color:var(--line)" data-a="calcancel">キャンセル</button></div>`;
+  el.innerHTML=h;
+}
+
+if(!Array.isArray(S.favs)){const o=S.favs||{};S.favs=Object.keys(o).map(d=>({id:uid(),name:'',src:d,items:o[d]}))}S.dl=S.dl||[];
+const REP=[['none','なし'],['w','毎週'],['2w','隔週'],['1m','毎月'],['2m','隔月'],['3m','3か月毎'],['4m','4か月毎'],['6m','6か月毎'],['12m','12か月毎']];
+const dlOf=i=>i&&i.dl?S.dl.find(x=>x.id===i.dl):null;
+const itxt=i=>{const e=dlOf(i);return e?e.t:i.t};
+const idone=i=>{const e=dlOf(i);return e?e.done:i.done};
+function addMonths(s,n){const d=new Date(s+'T00:00'),day=d.getDate();d.setDate(1);d.setMonth(d.getMonth()+n);d.setDate(Math.min(day,new Date(d.getFullYear(),d.getMonth()+1,0).getDate()));return iso(d)}
+const nextDue=(s,r)=>r==='w'?addDays(s,7):r==='2w'?addDays(s,14):addMonths(s,parseInt(r));
+function syncDl(){
+  const ids=new Set(S.dl.map(e=>e.id));
+  Object.keys(S.pages).forEach(d=>{
+    const p=S.pages[d];
+    p.items=p.items.filter(i=>!i.dl||(ids.has(i.dl)&&dlOf(i).due===d));
+    S.dl.forEach(e=>{if(e.due===d&&!p.items.some(i=>i.dl===e.id))p.items.unshift({id:uid(),t:'',done:false,dl:e.id})});
+    if(!p.items.length)p.items.push(blank());
+  });
+}
+function prep(){syncDl();Object.values(S.pages).forEach(p=>upd(p));syncFav();save()}
+function dlHtml(){
+  const rows=S.dl.map(e=>`<div class="dlitem"><div class="row${e.done?' done':''}"><input type="checkbox" data-c="dldone" data-id="${e.id}"${e.done?' checked':''}><input class="t" type="text" data-i="dl" data-id="${e.id}" value="${esc(e.t)}" placeholder="締切の内容"><button class="x" data-a="deldl" data-id="${e.id}" aria-label="削除">✕</button></div><div class="row2"><input type="date" data-c="dldue" data-id="${e.id}" value="${esc(e.due)}"><select data-c="dlrep" data-id="${e.id}">${REP.map(r=>`<option value="${r[0]}"${e.rep===r[0]?' selected':''}>${r[1]}</option>`).join('')}</select></div></div>`).join('');
+  return `<div class="head"><h1>締切</h1></div><div style="padding:0 11px">${rows}<button class="plus" data-a="adddl">＋</button></div>`;
+}
+let lastDay=todayS(),picking=false;
+function maintain(){
+  const t=todayS();
+  Object.keys(S.pages).forEach(d=>{if(d<t)delete S.pages[d]});
+  S.dl=S.dl.filter(e=>!(e.due&&e.due<t&&e.rep==='none'&&e.done));
+  S.dl.forEach(e=>{if(e.due&&e.due<t&&e.rep!=='none'){while(e.due<t)e.due=nextDue(e.due,e.rep);e.done=false}});
+  for(let i=0;i<7;i++)pg(addDays(t,i));
+  if(S.cur!=='fav'&&!S.pages[S.cur])S.cur=t;
+}
+const favTexts=d=>pg(d).items.map(i=>itxt(i).trim()).filter(Boolean);
+function syncFav(){S.favs.forEach(f=>{if(S.pages[f.src])f.items=favTexts(f.src)})}
+function rollover(){if(todayS()!==lastDay){lastDay=todayS();maintain();save();render()}}
+setInterval(rollover,30000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)rollover()});
+function renderFav(){
+  const ds=S.favs;
+  document.getElementById('page').innerHTML=dlHtml()+`<div class="head" style="margin-top:22px"><h1>お気に入り</h1></div>`+(ds.length?ds.map(f=>`<div class="box favcard"><div class="favh"><input class="t" type="text" data-i="favname" data-id="${f.id}" value="${esc(f.name)}" placeholder="名称（例：旅行）"><button class="star on" data-a="unfav" data-id="${f.id}" aria-label="お気に入りを外す">★</button></div>${f.items.length?f.items.map(x=>`<div class="row"><span class="t">${esc(x)}</span></div>`).join(''):'<div class="sub">持ち物なし</div>'}</div>`).join(''):'<div class="sub">各ページの「持ち物」の横の☆を押すと、ここに保存されます。</div>');
+  const on=document.querySelector('.tab.on');if(on)on.scrollIntoView({inline:'center',block:'nearest'});
+}
+function init(){
+  maintain();
+  
+  save();render();
+}
+function render(){
+  prep();const t=todayS(),cur=S.cur,isFav=cur==='fav',p=isFav?null:pg(cur);
+  const dates=Object.keys(S.pages).sort();
+  document.getElementById('tabs').innerHTML=`<button class="tab favtab${isFav?' on':''}" data-a="tab" data-d="fav">★<small>&nbsp;</small></button>`+dates.map(d=>`<button class="tab${d===cur?' on':''}${d===t?' today':''}" data-a="tab" data-d="${d}">${md(d)}<small>${wd(d)}</small></button>`).join('')+'<button class="tab plusTab" data-a="showadd" aria-label="タブを追加">＋</button>';
+  if(isFav){renderFav();return}
+  const diff=Math.round((new Date(cur+'T00:00')-new Date(t+'T00:00'))/864e5);
+  const label=diff===0?'今日':diff===1?'明日':'';
+  const title='持ち物';
+  const skip=p.usual==='skip';
+  let soon='';
+  if(cur===t){const L=S.dl.filter(e=>e.due&&e.due>=t&&e.due<=addDays(t,14)).sort((a,b)=>a.due<b.due?-1:1);
+    if(L.length)soon=`<div class="box soon"><div class="soonh">二週間以内の締切</div>${L.map(e=>{const n=Math.round((new Date(e.due+'T00:00')-new Date(t+'T00:00'))/864e5);return `<div class="soonr${e.done?' done':''}${n<=2?' hot':''}">${esc(e.t||'（無題）')}、${md(e.due)}（${n?'あと'+n+'日':'今日'}）</div>`}).join('')}</div>`}
+  const usualRows=S.usual.map(u=>`<div class="row"><input class="t" type="text" data-i="usual" data-id="${u.id}" value="${esc(u.t)}" placeholder="いつもの持ち物"><button class="x" data-a="delusual" data-id="${u.id}" aria-label="削除">✕</button></div>`).join('');
+  const rows=p.items.map(i=>{const e0=dlOf(i);if(e0)return `<div class="row${e0.done?' done':''}"><input type="checkbox" data-c="done" data-id="${i.id}"${e0.done?' checked':''}><span class="t">${esc(e0.t)}</span><span class="tag">締切</span></div>`;return `<div class="row${i.done?' done':''}"><input type="checkbox" data-c="done" data-id="${i.id}"${i.done?' checked':''}><input class="t" type="text" data-i="item" data-id="${i.id}" value="${esc(i.t)}" placeholder="持ち物"><button class="x" data-a="delitem" data-id="${i.id}" aria-label="削除">✕</button></div>`}).join('');
+  const del=cur<=addDays(t,6)?'':confirmDel?`<div class="confirm"><button class="go" data-a="delyes">決定</button><button class="go" style="color:var(--sub);border-color:var(--line)" data-a="delno">キャンセル</button></div>`:'<button class="link" data-a="delpage">ページを削除する</button>';
+  document.getElementById('page').innerHTML=`
+  ${soon}
+  <div class="head"><h1>${title} <button class="star${S.favs.some(f=>f.src===cur)?' on':''}" data-a="fav" aria-label="お気に入り">${S.favs.some(f=>f.src===cur)?'★':'☆'}</button></h1></div>
+  <div class="donebox" id="doneLine">${doneHtml(p)}</div>
+  <div class="box${skip?' skip':''}">
+    <div class="usual-h"><input type="checkbox" data-c="usual"${p.usual?' checked':''}>いつもの</div>
+    <div class="list">${usualRows}<button class="plus" data-a="addusual">＋</button></div>
+    <button class="skipbtn${skip?' on':''}" data-a="skip">不要</button>
+  </div>
+  <hr class="dots">
+  <div style="padding:0 11px">${rows}<button class="plus" data-a="additem">＋</button><button class="plus" data-a="openfav">お気に入りから</button>${picking?`<div class="pickbox">${S.favs.length?S.favs.map(f=>`<button class="pickb" data-a="pickfav" data-id="${f.id}">${esc(f.name||'（名称なし）')}</button>`).join(''):'<span class="sub">お気に入りはまだありません</span>'}<button class="go" style="color:var(--sub);border-color:var(--line)" data-a="closefav">閉じる</button></div>`:''}</div>
+  ${del}`;
+  if(focusSel){const e=document.querySelector(focusSel);if(e)e.focus();focusSel=null}
+  const on=document.querySelector('.tab.on');if(on)on.scrollIntoView({inline:'center',block:'nearest'});
+}
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-a]');if(!b)return;
+  const a=b.dataset.a,id=b.dataset.id,p=S.cur==='fav'?null:pg(S.cur);
+  if(a==='tab'){S.cur=b.dataset.d;confirmDel=false;picking=false}
+  else if(a==='today'){const t=todayS();pg(t);S.cur=t;confirmDel=false}
+  else if(a==='fav'){const i=S.favs.findIndex(f=>f.src===S.cur);if(i>=0)S.favs.splice(i,1);else S.favs.push({id:uid(),name:'',src:S.cur,items:favTexts(S.cur)})}
+  else if(a==='unfav'){S.favs=S.favs.filter(f=>f.id!==id)}
+  else if(a==='openfav'){picking=!picking}
+  else if(a==='closefav'){picking=false}
+  else if(a==='pickfav'){const f0=S.favs.find(x=>x.id===id);if(f0){if(p.items.length===1&&!p.items[0].dl&&!p.items[0].t.trim())p.items=[];f0.items.forEach(x=>p.items.push({id:uid(),t:x,done:false}));if(!p.items.length)p.items.push(blank())}picking=false}
+  else if(a==='adddl'){const e0={id:uid(),t:'',due:'',rep:'none',done:false};S.dl.push(e0);focusSel=`[data-i=dl][data-id="${e0.id}"]`}
+  else if(a==='deldl'){S.dl=S.dl.filter(x=>x.id!==id)}
+  else if(a==='showadd'){const b0=new Date((S.cur==='fav'?todayS():S.cur)+'T00:00');cal={y:b0.getFullYear(),m:b0.getMonth(),sel:[]};renderCal();return}
+  else if(a==='calprev'||a==='calnext'){cal.m+=a==='calprev'?-1:1;if(cal.m<0){cal.m=11;cal.y--}if(cal.m>11){cal.m=0;cal.y++}renderCal();return}
+  else if(a==='calday'){const d=b.dataset.d,i=cal.sel.indexOf(d);if(i<0)cal.sel.push(d);else cal.sel.splice(i,1);renderCal();return}
+  else if(a==='calcancel'){cal=null;renderCal();return}
+  else if(a==='calok'){const s=cal.sel.slice().sort();s.forEach(d=>pg(d));if(s.length)S.cur=s[0];cal=null;renderCal();confirmDel=false}
+  else if(a==='addusual'){const u={id:uid(),t:''};S.usual.push(u);focusSel=`[data-i=usual][data-id="${u.id}"]`}
+  else if(a==='delusual'){S.usual=S.usual.filter(u=>u.id!==id);if(!S.usual.length)S.usual.push({id:uid(),t:''})}
+  else if(a==='skip'){p.usual=p.usual==='skip'?'':'skip'}
+  else if(a==='additem'){const i=blank();p.items.push(i);focusSel=`[data-i=item][data-id="${i.id}"]`}
+  else if(a==='delitem'){p.items=p.items.filter(i=>i.id!==id);if(!p.items.length)p.items.push(blank())}
+  else if(a==='delpage'){confirmDel=true}
+  else if(a==='delno'){confirmDel=false}
+  else if(a==='delyes'){delete S.pages[S.cur];S.cur=todayS();pg(S.cur);confirmDel=false}
+  if(S.cur!=='fav')upd(pg(S.cur));syncFav();save();render();
+});
+document.addEventListener('input',e=>{
+  const el=e.target,k=el.dataset.i;if(!k)return;
+  if(k==='usual')S.usual.find(u=>u.id===el.dataset.id).t=el.value;
+  else if(k==='favname'){const f0=S.favs.find(x=>x.id===el.dataset.id);if(f0)f0.name=el.value}
+  else if(k==='dl'){const e0=S.dl.find(x=>x.id===el.dataset.id);if(e0)e0.t=el.value}
+  else{const it=pg(S.cur).items.find(i=>i.id===el.dataset.id);if(it)it.t=el.value}
+  if(S.cur!=='fav'){const q=pg(S.cur);upd(q);const dl=document.getElementById('doneLine');if(dl)dl.textContent=doneHtml(q)}syncFav();save();
+});
+document.addEventListener('change',e=>{
+  const el=e.target,c=el.dataset.c;
+  if(el.id==='newtab'){if(el.value){pg(el.value);S.cur=el.value;el.value='';document.getElementById('addbar').hidden=true;confirmDel=false;save();render()}return}
+  if(!c)return;
+  if(c==='dldone'||c==='dldue'||c==='dlrep'){const e0=S.dl.find(x=>x.id===el.dataset.id);if(e0){if(c==='dldone')e0.done=el.checked;else if(c==='dldue'){e0.due=el.value;e0.done=false}else e0.rep=el.value}save();render();return}
+  const p=pg(S.cur);
+  if(c==='usual')p.usual=el.checked?'done':'';
+  else if(c==='done'){const it=p.items.find(i=>i.id===el.dataset.id),e0=dlOf(it);if(e0)e0.done=el.checked;else it.done=el.checked}
+  upd(p);syncFav();save();render();
+});
+init();
+</script>
+</body>
+</html>
